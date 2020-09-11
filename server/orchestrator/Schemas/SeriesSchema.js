@@ -1,71 +1,77 @@
+const { gql } = require("apollo-server");
 const axios = require("axios")
 const Redis = require("ioredis")
 const redis = new Redis()
 
-class SeriesController {
-  static async create (req, res) {
-    // try {
-    //   const { data } = await axios({
-    //     url: "http://localhost:5002/tv",
-    //     method: "PUT"
-    //   })
-    //   res.status(200).json(data)
-    //   redis.set("movies", JSON.stringify(data))
-    // }
-    // catch (err) {
-    //   console.log(err)
-    //   res.status(500).json({ msg: "Internal Server Error"})
-    // }
-  }
-  
-  static async read (req, res) {
-    try {
-      const series = JSON.parse(await redis.get("tvSeries"))
-      if (series) res.status(200).json(series)
-      else {
-        const { data } = await axios({
-          url: "http://localhost:5002/tv",
-          method: "GET"
-        })
-        res.status(200).json(data)
-        redis.set("tvSeries", JSON.stringify(data))
-      }
-    }
-    catch (err) {
-      console.log(err)
-      res.status(500).json({ msg: "Internal Server Error"})
-    }
-  }
-  
-  static async update (req, res) {
-    // try {
-    //   const { data } = await axios({
-    //     url: "http://localhost:5002/tv",
-    //     method: "PUT"
-    //   })
-    //   res.status(200).json(data)
-    //   redis.set("movies", JSON.stringify(data))
-    // }
-    // catch (err) {
-    //   console.log(err)
-    //   res.status(500).json({ msg: "Internal Server Error"})
-    // }
-  }
-  
-  static async delete (req, res) {
-    // try {
-    //   const { data } = await axios({
-    //     url: "http://localhost:5002/tv",
-    //     method: "PUT"
-    //   })
-    //   res.status(200).json(data)
-    //   redis.set("movies", JSON.stringify(data))
-    // }
-    // catch (err) {
-    //   console.log(err)
-    //   res.status(500).json({ msg: "Internal Server Error"})
-    // }
-  }
-}
 
-module.exports = SeriesController
+const typeDefs = gql`
+  type Series {
+    _id: ID
+    title: String
+    overview: String
+    poster_path: String
+    popularity: Float
+    tags: [String] 
+  }
+
+  extend type Query {
+    tvSeries: [Series]
+    tvSeriesOne(id: ID!): Series
+  }
+
+  input inputSeries {
+    title: String
+    overview: String
+    poster_path: String
+    popularity: Float
+    tags: [String] 
+  }
+
+  extend type Mutation {
+    postSeries(newSeries : inputSeries) : Series
+    putSeries(id : ID, newSeries : inputSeries) : Series
+    delSeries(id : ID) : Series
+  }
+`
+
+const resolvers = {
+  Query: {
+    tvSeries: async () => {
+      const series = JSON.parse(await redis.get("tvSeries"))
+      if (series) return series
+      else {
+        const { data } = await axios.get("http://localhost:5002/tv")
+        return data
+      }
+    },
+    tvSeriesOne: async (_, args) => {
+      const { id } = args
+      const { data } = await axios.get(`http://localhost:5002/tv/${id}`)
+      return data
+    }
+  },
+  Mutation: {
+    postSeries: async (_, args) => {
+      const { newSeries } = args
+      const { data } = await axios.post("http://localhost:5002/tv", newSeries )
+      redis.del("tvSeries")
+      return data
+    },
+    
+    putSeries: async (_, args) => {
+      const { id, newSeries } = args
+      const { data } = await axios.put(`http://localhost:5002/tv/${id}`, newSeries )
+      redis.del("tvSeries")
+      return data
+    },
+    
+    delSeries: async (_, args) => {
+      const { id, delSeries } = args
+      const { data } = await axios.put(`http://localhost:5002/tv/${id}`, delSeries )
+      redis.del("tvSeries")
+      return data
+    }
+  }
+};
+
+module.exports = { typeDefs, resolvers };

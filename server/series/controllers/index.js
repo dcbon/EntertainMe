@@ -76,6 +76,7 @@ class SeriesController {
         popularity, 
         tags
       })
+      // console.log('data', data)
       res.status(200).json(data.value)
     }
     catch (err) {
