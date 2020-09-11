@@ -18,7 +18,7 @@ class SeriesController {
         popularity, 
         tags
       })
-      res.status(201).json(data)
+      res.status(201).json(data.ops[0])
     }
     catch (err) {
       console.log('err create', err)
@@ -33,6 +33,17 @@ class SeriesController {
     }
     catch (err) {
       console.log('err read', err)
+      res.status(500).json({ msg: "Internal Server Error" })
+    }
+  }
+  
+  static async find (req, res) {
+    try {
+      const data = await Series.findOne(req.params.id)
+      res.status(200).json(data)
+    }
+    catch (err) {
+      console.log('err find', err)
       res.status(500).json({ msg: "Internal Server Error" })
     }
   }
@@ -65,7 +76,7 @@ class SeriesController {
         popularity, 
         tags
       })
-      res.status(200).json(data)
+      res.status(200).json(data.value)
     }
     catch (err) {
       console.log('err update', err)

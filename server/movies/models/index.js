@@ -11,14 +11,18 @@ class MovieModel {
     return Movie.find().toArray()
   }
 
+  static findOne (id) {
+    return Movie.findOne({_id: ObjectId(id)})
+  }
+
   static updateOne (id, data) {
-    return Movie.updateOne({_id: ObjectId(id)}, {
+    return Movie.findOneAndUpdate({_id: ObjectId(id)}, {
       $set: data
     })
   }
 
   static deleteOne (id) {
-    return Movie.deleteOne({_id: ObjectId(id)})
+    return Movie.findOneAndDelete({_id: ObjectId(id)})
   }
 }
 

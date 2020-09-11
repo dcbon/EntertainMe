@@ -18,7 +18,7 @@ class MoviesController {
         popularity, 
         tags
       })
-      res.status(201).json(data)
+      res.status(201).json(data.ops[0])
     }
     catch (err) {
       console.log('err create', err)
@@ -65,7 +65,7 @@ class MoviesController {
         popularity, 
         tags
       })
-      res.status(200).json(data)
+      res.status(200).json(data.value)
     }
     catch (err) {
       console.log('err update', err)

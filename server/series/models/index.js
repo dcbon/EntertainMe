@@ -11,14 +11,18 @@ class SeriesModel {
     return Series.find().toArray()
   }
 
+  static findOne (id) {
+    return Series.findOne({_id: ObjectId(id)})
+  }
+
   static updateOne (id, data) {
-    return Series.updateOne({_id: ObjectId(id)}, {
+    return Series.findOneAndUpdate({_id: ObjectId(id)}, {
       $set: data
     })
   }
 
   static deleteOne (id) {
-    return Series.deleteOne({_id: ObjectId(id)})
+    return Series.findOneAndDelete({_id: ObjectId(id)})
   }
 }
 
