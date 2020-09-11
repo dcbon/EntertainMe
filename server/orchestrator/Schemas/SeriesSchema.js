@@ -20,7 +20,7 @@ class SeriesController {
   
   static async read (req, res) {
     try {
-      const series = JSON.parse(await redis.get("series"))
+      const series = JSON.parse(await redis.get("tvSeries"))
       if (series) res.status(200).json(series)
       else {
         const { data } = await axios({
@@ -28,7 +28,7 @@ class SeriesController {
           method: "GET"
         })
         res.status(200).json(data)
-        redis.set("series", JSON.stringify(data))
+        redis.set("tvSeries", JSON.stringify(data))
       }
     }
     catch (err) {

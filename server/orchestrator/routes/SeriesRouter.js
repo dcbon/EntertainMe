@@ -1,5 +1,5 @@
 const router = require("express").Router()
-const SeriesCtrl = require("../controllers/SeriesCtrl")
+const SeriesCtrl = require("../Schemas/SeriesSchema")
 
 // router.post("/", SeriesCtrl.create)
 router.get("/", SeriesCtrl.read)

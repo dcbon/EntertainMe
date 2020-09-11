@@ -1,5 +1,5 @@
 const router = require("express").Router()
-const MovieCtrl = require("../controllers/MovieCtrl")
+const MovieCtrl = require("../Schemas/MovieSchema")
 
 // router.post("/", MovieCtrl.create)
 router.get("/", MovieCtrl.read)

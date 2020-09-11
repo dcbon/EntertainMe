@@ -1,12 +1,23 @@
-const express = require("express")
-const app = express()
+const { ApolloServer, gql, makeExecutableSchema } = require("apollo-server");
 const PORT = process.env.PORT || 5000
-const routes = require("./routes")
-const cors = require("cors")
+const EntMeSchema = require("./Schemas/EntertainMeSchema")
+const MovieSchema = require("./Schemas/MovieSchema")
+// const SeriesSchema = require("../Schemas/SeriesSchema")
+// const cors = require("cors")
 
+const typeDefs = gql`
+  type Query
+  type Mutation
+`
 
-app.use(cors())
-app.use(express.urlencoded({ extended: false }))
-app.use(express.json())
-app.use("/", routes)
-app.listen(PORT, () => console.log(`Server is running at PORT ${PORT}`))
+const schema = makeExecutableSchema({
+  typeDefs: [typeDefs, EntMeSchema.typeDefs, MovieSchema.typeDefs],
+  resolvers: [EntMeSchema.resolvers, MovieSchema.resolvers]
+})
+
+// app.use(cors())
+const server = new ApolloServer({ schema })
+
+server.listen( PORT ).then(({ url }) => {
+  console.log(`🚀  Server ready at ${url}`);
+});
