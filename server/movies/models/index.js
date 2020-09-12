@@ -16,9 +16,7 @@ class MovieModel {
   }
 
   static updateOne (id, data) {
-    return Movie.findOneAndUpdate({_id: ObjectId(id)}, {
-      $set: data
-    })
+    return Movie.findOneAndUpdate({_id: ObjectId(id)}, { $set: data }, { returnOriginal: false })
   }
 
   static deleteOne (id) {

@@ -16,9 +16,7 @@ class SeriesModel {
   }
 
   static updateOne (id, data) {
-    return Series.findOneAndUpdate({_id: ObjectId(id)}, {
-      $set: data
-    })
+    return Series.findOneAndUpdate({_id: ObjectId(id)}, { $set: data }, { returnOriginal: false })
   }
 
   static deleteOne (id) {
