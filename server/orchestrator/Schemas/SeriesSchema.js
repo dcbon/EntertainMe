@@ -46,7 +46,7 @@ const resolvers = {
     },
     tvSeriesOne: async (_, args) => {
       const { id } = args
-      const { data } = await axios.get(`http://localhost:5002/tv/${id}`)
+      const { data } = await axios.delete(`http://localhost:5002/tv/${id}`)
       return data
     }
   },

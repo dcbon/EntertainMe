@@ -67,7 +67,7 @@ const resolvers = {
     
     delMovie: async (_, args) => {
       const { id, delMovie } = args
-      const { data } = await axios.put(`http://localhost:5001/movies/${id}`, delMovie )
+      const { data } = await axios.delete(`http://localhost:5001/movies/${id}`, delMovie )
       redis.del("movies")
       return data
     }

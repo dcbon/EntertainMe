@@ -1,6 +1,9 @@
 import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
-import { Home } from "./pages";
+import { Home, Movies, Series } from "./pages";
+import Navbar from './components/Navbar'
+import './App.css'
 
 const client = new ApolloClient({
   uri: "http://localhost:5000",
@@ -10,7 +13,20 @@ const client = new ApolloClient({
 function App() {
   return (
     <ApolloProvider client={client}>
-      <Home/>
+      <Router>
+        <Navbar/>
+        <Switch>
+          <Route exact path="/">
+            <Home/>
+          </Route>
+          <Route path="/movies">
+            <Movies/>
+          </Route>
+          <Route path="/series">
+            <Series/>
+          </Route>
+        </Switch>
+      </Router>
     </ApolloProvider>
   );
 }
