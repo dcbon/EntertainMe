@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
-import { Home, Movies, Series } from "./pages";
+import { Home, Movies, Series, Form } from "./pages";
 import Navbar from './components/Navbar'
 import './App.css'
 
@@ -24,6 +24,9 @@ function App() {
           </Route>
           <Route path="/series">
             <Series/>
+          </Route>
+          <Route path="/add">
+            <Form/>
           </Route>
         </Switch>
       </Router>

@@ -46,7 +46,7 @@ const resolvers = {
     },
     tvSeriesOne: async (_, args) => {
       const { id } = args
-      const { data } = await axios.delete(`http://localhost:5002/tv/${id}`)
+      const { data } = await axios.get(`http://localhost:5002/tv/${id}`)
       return data
     }
   },
@@ -67,7 +67,7 @@ const resolvers = {
     
     delSeries: async (_, args) => {
       const { id, delSeries } = args
-      const { data } = await axios.put(`http://localhost:5002/tv/${id}`, delSeries )
+      const { data } = await axios.delete(`http://localhost:5002/tv/${id}`, delSeries )
       redis.del("tvSeries")
       return data
     }
