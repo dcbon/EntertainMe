@@ -26,13 +26,22 @@ export const GET_MOVIE = gql`
   }
 `
 
-// export const POST_MOVIE = gql`
-//   mutation postMovie($name: String, $age: Int) {
-//     postMovie(newUser: { name: $name, age: $age }) {
-//       id
-//       name
-//       age
-//     }
-//   }
+export const POST_MOVIE = gql`
+  mutation postMovie($title: String, $overview: String, $poster_path: String, $popularity: Float, $tags: [String]) {
+    postMovie(newMovie: { title: $title, overview: $overview, poster_path: $poster_path, popularity: $popularity, tags: $tags }) {
+      title
+      overview
+      poster_path
+      popularity
+      tags
+    }
+  }
+`
+
+// export const PUT_MOVIE = gql`
+
 // `
 
+// export const DEL_MOVIE = gql`
+
+// `

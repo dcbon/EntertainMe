@@ -1,13 +1,27 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
-import { Home, Movies, Series, Form } from "./pages";
+import { Home, Movies, Series, Form, Favorites } from "./pages";
 import Navbar from './components/Navbar'
+import Footer from './components/Footer'
+import { favoriteItems } from "./cache";
 import './App.css'
 
 const client = new ApolloClient({
   uri: "http://localhost:5000",
-  cache: new InMemoryCache()
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          favorites: {
+            read() {
+              return favoriteItems()
+            }
+          }
+        }
+      }
+    }
+  })
 })
 
 function App() {
@@ -15,20 +29,26 @@ function App() {
     <ApolloProvider client={client}>
       <Router>
         <Navbar/>
-        <Switch>
-          <Route exact path="/">
-            <Home/>
-          </Route>
-          <Route path="/movies">
-            <Movies/>
-          </Route>
-          <Route path="/series">
-            <Series/>
-          </Route>
-          <Route path="/add">
-            <Form/>
-          </Route>
-        </Switch>
+        <div className="content">
+          <Switch>
+            <Route exact path="/">
+              <Home/>
+            </Route>
+            <Route path="/movies">
+              <Movies/>
+            </Route>
+            <Route path="/series">
+              <Series/>
+            </Route>
+            <Route path="/add">
+              <Form/>
+            </Route>
+            <Route path="/favorites">
+              <Favorites/>
+            </Route>
+          </Switch>
+        </div>
+        <Footer/>
       </Router>
     </ApolloProvider>
   );

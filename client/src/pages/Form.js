@@ -1,19 +1,7 @@
 import React, { useState } from 'react'
-import { gql, useMutation } from "@apollo/client";
-import { GET_MOVIES } from '../gql/moviesQueries';
+import { useMutation } from "@apollo/client";
+import { GET_MOVIES, POST_MOVIE } from '../gql/moviesQueries';
 
-
-const POST_MOVIE = gql`
-  mutation postMovie($title: String, $overview: String, $poster_path: String, $popularity: Float, $tags: [String]) {
-    postMovie(newUser: { title: $title, overview: $overview, poster_path: $poster_path, popularity: $popularity, tags: $tags }) {
-      title
-      overview
-      poster_path
-      popularity
-      tags
-    }
-  }
-`
 
 const Form = () => {
   const [title, setTitle] = useState("")
@@ -24,6 +12,11 @@ const Form = () => {
   const [postMovie, { data }] = useMutation(POST_MOVIE, {
     refetchQueries: [{ query: GET_MOVIES }]
   });
+
+  const changeForm = () => {
+    
+  }
+  
 
   const onChecked = (e) => {
     let temp = tags
@@ -45,8 +38,6 @@ const Form = () => {
   
   const submitMovie = (e) => {
     e.preventDefault()
-    console.log('e', e)
-
     postMovie({
       variables: {
         title,
@@ -64,7 +55,7 @@ const Form = () => {
       <div className="row justify-content-center">
         <form className="col-5" onSubmit={submitMovie}>
           <h3 className="text-center text-org mb-3">Add Movie 
-            <span><i className="far fa-exchange-alt ml-3 text-light"></i></span>
+            <span><div className="far fa-exchange-alt ml-3 text-light" role="button" onClick={changeForm}></div></span>
           </h3>
           <div className="form-group">
             <label className="text-org ml-3">Title</label>
@@ -97,7 +88,7 @@ const Form = () => {
                 className="form-control pop" 
                 id="popularity" 
                 min="0.0" max="10"
-                onChange={(e) => setPopularity(e.target.value)}
+                onChange={(e) => setPopularity(Number(e.target.value))}
                 value={popularity}
               />
               <div className="input-group-append">

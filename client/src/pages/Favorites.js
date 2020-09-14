@@ -1,17 +1,17 @@
 import React from 'react'
+import { GET_FAVORITES } from "../gql/favoritesQueries";
 import { useQuery } from "@apollo/client";
-import { GET_MOVIES } from "../gql/moviesQueries";
 import MovieCard from "../components/MovieCard";
 
-const Movies = () => {
-  const { loading, error, data } = useQuery(GET_MOVIES)  
+const Favorites = () => {
+  const { data, loading, error } = useQuery(GET_FAVORITES)
 
   if (error) return (
     <div className="container-sm">
       <div className="container justify-content-center text-center">
         <div className="row justify-content-center mt-5">
           <div className="col mt-5">
-            <img src="dreamer.svg" style={{width: 300}} alt="empty" />
+            <img src="void.svg" style={{width: 300}} alt="empty" />
           </div>
         </div>
         <h4 className="text-org mt-5">Something went wrong...</h4>
@@ -35,11 +35,25 @@ const Movies = () => {
     </div>
   )
 
+  if (!data.favorites.length) return (
+    <div className="container-sm">
+      <div className="container justify-content-center text-center">
+        <div className="row justify-content-center mt-5">
+          <div className="col mt-5">
+            <img src="empty.svg" style={{width: 300}} alt="empty" />
+          </div>
+        </div>
+        <h4 className="text-org mt-5">Favorite List is empty.</h4>
+        <h5>Click <span role="img" aria-label="heart">&#x1F9E1;</span> on top right of your Favorite Movie or Series</h5>
+      </div>
+    </div>
+  )
+
   return (
     <div className="container my-5">
       <div class="row row-cols-4 row-cols-md-6">
         {
-          data.Movies && data.Movies.map((datum, i) => {
+          data.favorites && data.favorites.map((datum, i) => {
             return <MovieCard movie={datum} key={i} />
           })
         }
@@ -48,4 +62,4 @@ const Movies = () => {
   )
 }
 
-export default Movies
+export default Favorites
