@@ -7,7 +7,7 @@ const Movies = () => {
   const { loading, error, data } = useQuery(GET_MOVIES)  
 
   if (error) return (
-    <div className="container-sm">
+    <div className="container">
       <div className="container justify-content-center text-center">
         <div className="row justify-content-center mt-5">
           <div className="col mt-5">
@@ -37,7 +37,7 @@ const Movies = () => {
 
   return (
     <div className="container my-5">
-      <div class="row row-cols-4 row-cols-md-6">
+      <div className="row row-cols-4 row-cols-md-6">
         {
           data.Movies && data.Movies.map((datum, i) => {
             return <MovieCard movie={datum} key={i} />

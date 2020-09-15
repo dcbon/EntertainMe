@@ -1,20 +1,26 @@
 import React, { useState } from 'react'
 import { useMutation } from "@apollo/client";
 import { GET_MOVIES, POST_MOVIE } from '../gql/moviesQueries';
+import Alert from '../components/Alert'
+import { useHistory } from "react-router-dom";
 
 
 const Form = () => {
+  const history = useHistory()
   const [title, setTitle] = useState("")
   const [poster_path, setPoster] = useState("")
   const [overview, setOverview] = useState("")
   const [popularity, setPopularity] = useState(0.0)
   const [tags, setTags] = useState([]) 
+  const [validation, setValidation] = useState(true)
+  const [msg, setMsg] = useState("")
+  const [modal, setModal] = useState(false)
   const [postMovie, { data }] = useMutation(POST_MOVIE, {
     refetchQueries: [{ query: GET_MOVIES }]
   });
 
   const changeForm = () => {
-    
+    history.push("/add-series")
   }
   
 
@@ -25,7 +31,9 @@ const Form = () => {
         temp.push(e.target.value)
         setTags(temp)
       } else {
-        alert("Tags cannot be more than 3") // nanti ganti sweetalert
+        setMsg("Tags cannot be more than 3")
+        setValidation(false)
+        setModal(true)
         e.target.checked = false
       }
     } 
@@ -38,20 +46,54 @@ const Form = () => {
   
   const submitMovie = (e) => {
     e.preventDefault()
-    postMovie({
-      variables: {
-        title,
-        overview,
-        poster_path,
-        popularity,
-        tags,
-      }
-    });
+    if (!title) {
+      setMsg("Title cannot be empty!")
+      setValidation(false)
+      setModal(true)
+    }
+    else if (!overview) {
+      setMsg("Overview cannot be empty!")
+      setValidation(false)
+      setModal(true)
+    }
+    else if (!popularity) {
+      setMsg("Rating cannot be empty!")
+      setValidation(false)
+      setModal(true)
+    }
+    else if (!tags) {
+      setMsg("Tag(s) cannot be empty!")
+      setValidation(false)
+      setModal(true)
+    }
+    else {
+      postMovie({
+        variables: {
+          title,
+          overview,
+          poster_path: poster_path || "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRcDWX9Md-19_drWMmKVp6azbB8Y1stOiii55Q9KzGVMw&usqp=CAU&ec=45699843",
+          popularity,
+          tags,
+        }
+      });
+      setMsg("Movie has been added to database")
+      setValidation(true)
+      setModal(true)
+      setTitle("")
+      setOverview("")
+      setPoster("")
+      setPopularity(0.0)
+      setTags([])
+      history.push("/movies")
+    }
   }
   
 
   return (
     <div className="container my-5">
+      {
+        modal && <Alert show={modal} close={() => setModal(false)} validation={validation} msg={msg} />
+      }
       <div className="row justify-content-center">
         <form className="col-5" onSubmit={submitMovie}>
           <h3 className="text-center text-org mb-3">Add Movie 
@@ -78,6 +120,7 @@ const Form = () => {
               onChange={(e) => setPoster(e.target.value)}
               value={poster_path}
             />
+            <small className="text-gry ml-3">Empty it to use default poster</small>
           </div>
           <div className="form-group">
             <label className="text-org ml-3">Rating</label>
@@ -121,7 +164,7 @@ const Form = () => {
               rows="3" 
               className="form-control rounded-box input-box" 
               id="overview" 
-              placeholder="eg. The Duchess"
+              placeholder="eg. This Emmy winning series is a comic look at the assorted humiliations and rare triumphs of a group of girls in their 20s."
               onChange={(e) => setOverview(e.target.value)}
               value={overview}
             />

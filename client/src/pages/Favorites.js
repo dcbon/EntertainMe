@@ -51,7 +51,7 @@ const Favorites = () => {
 
   return (
     <div className="container my-5">
-      <div class="row row-cols-4 row-cols-md-6">
+      <div className="row row-cols-4 row-cols-md-6">
         {
           data.favorites && data.favorites.map((datum, i) => {
             return <MovieCard movie={datum} key={i} />

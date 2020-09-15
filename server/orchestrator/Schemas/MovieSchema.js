@@ -16,7 +16,7 @@ const typeDefs = gql`
 
   extend type Query {
     Movies: [Movies]
-    Movie(id: ID!): Movies
+    Movie(_id: ID!): Movies
   }
 
   input inputMovie {
@@ -29,8 +29,8 @@ const typeDefs = gql`
 
   extend type Mutation {
     postMovie(newMovie : inputMovie) : Movies
-    putMovie(id : ID, newMovie : inputMovie) : Movies
-    delMovie(id : ID) : Movies
+    putMovie(_id : ID, newMovie : inputMovie) : Movies
+    delMovie(_id : ID) : Movies
   }
 `
 
@@ -45,8 +45,8 @@ const resolvers = {
       }
     },
     Movie: async (_, args) => {
-      const { id } = args
-      const { data } = await axios.get(`http://localhost:5001/movies/${id}`)
+      const { _id } = args
+      const { data } = await axios.get(`http://localhost:5001/movies/${_id}`)
       return data
     }
   },
@@ -59,15 +59,15 @@ const resolvers = {
     },
     
     putMovie: async (_, args) => {
-      const { id, newMovie } = args
-      const { data } = await axios.put(`http://localhost:5001/movies/${id}`, newMovie )
+      const { _id, newMovie } = args
+      const { data } = await axios.put(`http://localhost:5001/movies/${_id}`, newMovie )
       redis.del("movies")
       return data
     },
     
     delMovie: async (_, args) => {
-      const { id, delMovie } = args
-      const { data } = await axios.delete(`http://localhost:5001/movies/${id}`, delMovie )
+      const { _id, delMovie } = args
+      const { data } = await axios.delete(`http://localhost:5001/movies/${_id}`, delMovie )
       redis.del("movies")
       return data
     }

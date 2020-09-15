@@ -14,8 +14,8 @@ export const GET_MOVIES = gql`
 `
 
 export const GET_MOVIE = gql`
-  query {
-    Movies {
+  query ($_id: ID) {
+    Movie (_id: $_id) {
       _id
       title
       overview
@@ -38,10 +38,27 @@ export const POST_MOVIE = gql`
   }
 `
 
-// export const PUT_MOVIE = gql`
+export const PUT_MOVIE = gql`
+  mutation putMovie($_id: ID, $title: String, $overview: String, $poster_path: String, $popularity: Float, $tags: [String]) {
+    putMovie(_id: {_id: $_id}, newMovie: { title: $title, overview: $overview, poster_path: $poster_path, popularity: $popularity, tags: $tags }) {
+      title
+      overview
+      poster_path
+      popularity
+      tags
+    }
+  }
+`
 
-// `
-
-// export const DEL_MOVIE = gql`
-
-// `
+export const DEL_MOVIE = gql`
+  mutation delMovie ($_id: ID) {
+    delMovie(_id: $_id) {
+      _id
+      title
+      overview
+      poster_path
+      popularity
+      tags
+    }
+  }
+`
