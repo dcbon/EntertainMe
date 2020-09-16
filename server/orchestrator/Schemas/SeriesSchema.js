@@ -16,7 +16,7 @@ const typeDefs = gql`
 
   extend type Query {
     tvSeries: [Series]
-    tvSeriesOne(id: ID!): Series
+    tvSeriesOne(_id: ID!): Series
   }
 
   input inputSeries {
@@ -29,8 +29,8 @@ const typeDefs = gql`
 
   extend type Mutation {
     postSeries(newSeries : inputSeries) : Series
-    putSeries(id : ID, newSeries : inputSeries) : Series
-    delSeries(id : ID) : Series
+    putSeries(_id : ID, newSeries : inputSeries) : Series
+    delSeries(_id : ID) : Series
   }
 `
 
@@ -51,8 +51,8 @@ const resolvers = {
     },
     tvSeriesOne: async (_, args) => {
       try {
-        const { id } = args
-        const { data } = await axios.get(`http://localhost:5002/tv/${id}`)
+        const { _id } = args
+        const { data } = await axios.get(`http://localhost:5002/tv/${_id}`)
         return data
       }
       catch (err) {
@@ -75,8 +75,8 @@ const resolvers = {
     
     putSeries: async (_, args) => {
       try {
-        const { id, newSeries } = args
-        const { data } = await axios.put(`http://localhost:5002/tv/${id}`, newSeries )
+        const { _id, newSeries } = args
+        const { data } = await axios.put(`http://localhost:5002/tv/${_id}`, newSeries )
         redis.del("tvSeries")
         return data
       }
@@ -87,8 +87,8 @@ const resolvers = {
     
     delSeries: async (_, args) => {
       try {
-        const { id, delSeries } = args
-        const { data } = await axios.delete(`http://localhost:5002/tv/${id}`, delSeries )
+        const { _id, delSeries } = args
+        const { data } = await axios.delete(`http://localhost:5002/tv/${_id}`, delSeries )
         redis.del("tvSeries")
         return data
       }
