@@ -37,39 +37,64 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     tvSeries: async () => {
-      const series = JSON.parse(await redis.get("tvSeries"))
-      if (series) return series
-      else {
-        const { data } = await axios.get("http://localhost:5002/tv")
-        return data
+      try {
+        const series = JSON.parse(await redis.get("tvSeries"))
+        if (series) return series
+        else {
+          const { data } = await axios.get("http://localhost:5002/tv")
+          return data
+        }
+      }
+      catch (err) {
+        console.log('er get series', err)
       }
     },
     tvSeriesOne: async (_, args) => {
-      const { id } = args
-      const { data } = await axios.get(`http://localhost:5002/tv/${id}`)
-      return data
+      try {
+        const { id } = args
+        const { data } = await axios.get(`http://localhost:5002/tv/${id}`)
+        return data
+      }
+      catch (err) {
+        console.log('er get series one', err)
+      }
     }
   },
   Mutation: {
     postSeries: async (_, args) => {
-      const { newSeries } = args
-      const { data } = await axios.post("http://localhost:5002/tv", newSeries )
-      redis.del("tvSeries")
-      return data
+      try {
+        const { newSeries } = args
+        const { data } = await axios.post("http://localhost:5002/tv", newSeries )
+        redis.del("tvSeries")
+        return data
+      }
+      catch (err) {
+        console.log('err post series', err)
+      }
     },
     
     putSeries: async (_, args) => {
-      const { id, newSeries } = args
-      const { data } = await axios.put(`http://localhost:5002/tv/${id}`, newSeries )
-      redis.del("tvSeries")
-      return data
+      try {
+        const { id, newSeries } = args
+        const { data } = await axios.put(`http://localhost:5002/tv/${id}`, newSeries )
+        redis.del("tvSeries")
+        return data
+      }
+      catch (err) {
+        console.log('er put series', err)
+      }
     },
     
     delSeries: async (_, args) => {
-      const { id, delSeries } = args
-      const { data } = await axios.delete(`http://localhost:5002/tv/${id}`, delSeries )
-      redis.del("tvSeries")
-      return data
+      try {
+        const { id, delSeries } = args
+        const { data } = await axios.delete(`http://localhost:5002/tv/${id}`, delSeries )
+        redis.del("tvSeries")
+        return data
+      }
+      catch (err) {
+        console.log('er del series', err)
+      }
     }
   }
 };

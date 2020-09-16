@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
-import { Home, Movies, Series, Form, Favorites, SeriesForm, Detail } from "./pages";
+import { Home, Movies, Series, Form, Favorites, SeriesForm, EditForm } from "./pages";
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import { favoriteItems } from "./cache";
@@ -39,9 +39,9 @@ function App() {
             <Route exact path="/">
               <Home/>
             </Route>
-            {/* <Route path="/movies/:id">
-              <Detail/>
-            </Route> */}
+            <Route path="/edit/:_id">
+              <EditForm/>
+            </Route>
             <Route path="/movies">
               <Movies/>
             </Route>

@@ -15,7 +15,7 @@ const Form = () => {
   const [validation, setValidation] = useState(true)
   const [msg, setMsg] = useState("")
   const [modal, setModal] = useState(false)
-  const [postMovie, { data }] = useMutation(POST_MOVIE, {
+  const [postMovie] = useMutation(POST_MOVIE, {
     refetchQueries: [{ query: GET_MOVIES }]
   });
 
@@ -46,27 +46,7 @@ const Form = () => {
   
   const submitMovie = (e) => {
     e.preventDefault()
-    if (!title) {
-      setMsg("Title cannot be empty!")
-      setValidation(false)
-      setModal(true)
-    }
-    else if (!overview) {
-      setMsg("Overview cannot be empty!")
-      setValidation(false)
-      setModal(true)
-    }
-    else if (!popularity) {
-      setMsg("Rating cannot be empty!")
-      setValidation(false)
-      setModal(true)
-    }
-    else if (!tags) {
-      setMsg("Tag(s) cannot be empty!")
-      setValidation(false)
-      setModal(true)
-    }
-    else {
+    if (title && overview && popularity && tags.length !== 0) {
       postMovie({
         variables: {
           title,
@@ -85,6 +65,26 @@ const Form = () => {
       setPopularity(0.0)
       setTags([])
       history.push("/movies")
+    }
+    else if (!title) {
+      setMsg("Title cannot be empty!")
+      setValidation(false)
+      setModal(true)
+    }
+    else if (!overview) {
+      setMsg("Overview cannot be empty!")
+      setValidation(false)
+      setModal(true)
+    }
+    else if (!popularity) {
+      setMsg("Rating cannot be empty!")
+      setValidation(false)
+      setModal(true)
+    }
+    else if (tags.length === 0) {
+      setMsg("Tag(s) cannot be empty!")
+      setValidation(false)
+      setModal(true)
     }
   }
   
